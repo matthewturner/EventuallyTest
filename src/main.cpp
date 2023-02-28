@@ -26,11 +26,11 @@ void setup()
     pinMode(BUTTON_PIN, INPUT_PULLUP);
 
     mgr.addListener(&startBlinkListener);
-    mgr.addListener(&stopBlinkListener);
-    mgr.addListener(&blinkListener);
+    // mgr.addListener(&stopBlinkListener);
+    // mgr.addListener(&blinkListener);
 
-    stopBlinkListener.disable();
-    blinkListener.disable();
+    // stopBlinkListener.disable();
+    // blinkListener.disable();
 
     Serial.println(F("Setup complete, continuing..."));
 }
@@ -42,13 +42,18 @@ void loop()
 
 bool startBlinking()
 {
-    blinkListener.enable();
+    // blinkListener.enable();
+    mgr.reset();
+    mgr.addListener(&blinkListener);
+    mgr.addListener(&stopBlinkListener);
     return true;
 }
 
 bool stopBlinking()
 {
-    stopBlinkListener.disable();
+    // stopBlinkListener.disable();
+    mgr.reset();
+    mgr.addListener(&stopBlinkListener);
     return true;
 }
 
