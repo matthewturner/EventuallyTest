@@ -8,6 +8,16 @@ void setup()
 
     pinMode(13, OUTPUT);
 
+    pinMode(2, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(2), wakeUp, FALLING);
+
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+    mgr.addListener(&startBlinkListener);
+
+    commandListener.when("ping", (EvtCommandAction)pong);
+    mgr.addListener(&commandListener);
+
     // set the initial state
     stateMachine.transition(IDLE);
 
@@ -19,13 +29,6 @@ void setup()
 
     // register the listener
     mgr.addListener(&stateMachine);
-
-    pinMode(2, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(2), wakeUp, FALLING);
-
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
-
-    mgr.addListener(&startBlinkListener);
 
     Serial.println(F("Setup complete, continuing..."));
 }
@@ -41,6 +44,8 @@ bool startBlinking()
     mgr.reset();
     mgr.addListener(&blinkListener);
     mgr.addListener(&stopBlinkListener);
+    mgr.addListener(&commandListener);
+    mgr.addListener(&stateMachine);
     return true;
 }
 
@@ -49,6 +54,8 @@ bool stopBlinking()
     Serial.println(F("Stop blinking..."));
     mgr.reset();
     mgr.addListener(&startBlinkListener);
+    mgr.addListener(&commandListener);
+    mgr.addListener(&stateMachine);
     return true;
 }
 
@@ -82,5 +89,11 @@ bool inProgress()
 {
     Serial.println(F("In progress..."));
     digitalWrite(13, HIGH);
+    return true;
+}
+
+bool pong(IEvtContext *ctx, IEvtListener *lstn, long data)
+{
+    Serial.println(F("pong!"));
     return true;
 }

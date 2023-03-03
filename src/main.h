@@ -20,8 +20,11 @@ EvtStateMachineListener stateMachine;
 EvtPinListener startBlinkListener(BUTTON_PIN, (EvtAction)startBlinking);
 EvtPinListener stopBlinkListener(BUTTON_PIN, (EvtAction)stopBlinking);
 EvtTimeListener blinkListener(500, true, (EvtAction)blink);
+EvtCommandListener commandListener(&Serial);
 
 void wakeUp();
 bool idle();
 bool pending();
 bool inProgress();
+
+bool pong(IEvtContext *ctx, IEvtListener *lstn, long data);
